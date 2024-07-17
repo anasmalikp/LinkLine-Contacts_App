@@ -46,14 +46,15 @@ namespace Contacts_App.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll(string type)
+        public async Task<IActionResult> GetAll(string type, int page)
         {
             var response = await services.GetAllContacts(type);
-            if (response == null)
+            var contactsPerPage = response.Skip((page - 1) * 5).Take(5).ToList();
+            if (response == null || contactsPerPage == null)
             {
                 return BadRequest();
             }
-            return Ok(response);
+            return Ok(contactsPerPage);
         }
     }
 }
